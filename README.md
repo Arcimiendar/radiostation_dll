@@ -3,14 +3,14 @@
 
 ## API
 ### void init(const char*& ip_address, bool is_server)
-Initiate application (create or launch server)
+Initiate application (create a server or connect to)
 #### Arguments
-``bool is_server`` - create server <br>
-``const char* & ip_address`` - launch server on specified ip address. 
+``bool is_server`` - create a server or not <br>
+``const char* & ip_address`` - connect to the server by specified ip address. 
 If is_server == true, we ignore the content of this argument
 #### Example
 ``init("192.168.1.1", false)`` <br>
-``init("", true)"``
+``init("", true)``
 
 ### void stop()
 Stop application
