@@ -21,7 +21,7 @@ Stop application
 Set level of noise that will be added to receive sound
 #### Arguments
 `float level` - level of the noise. It's equal to 2 by default. 
-If noise == 0 than noise disappears. Recommended range of usage is [0..2]
+If level == 0 than noise disappears. Recommended range of usage is [0..2]
 #### Example
 `set_noise_level(1.)`
 
