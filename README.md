@@ -1,63 +1,63 @@
 #RADIOSTATION DLL
 "Radiostation dll" is a core part of application
 
-##API
+## API
 ### void init(const char*& ip_address, bool is_server)
 Initiate application (create or launch server)
-####Arguments
+#### Arguments
 ``bool is_server`` - create server <br>
 ``const char* & ip_address`` - launch server on specified ip address. 
 If is_server == true, we ignore the content of this argument
-####Example
+#### Example
 ``init("192.168.1.1", false)`` <br>
 ``init("", true)"``
 
 ### void stop()
 Stop application
-####Example
+#### Example
 ``stop()``
 
 ### void set_noise_level(float level)
 Set level of noise that will be added to receive sound
-####Arguments
+#### Arguments
 `float level` - level of the noise. It's equal to 2 by default. 
 If noise == 0 than noise disappears. Recommended range of usage is [0..2]
-####Example
+#### Example
 `set_noise_level(1.)`
 
-###void make_not_tuned()
+### void make_not_tuned()
 It makes radiostation not tuned again.
 In this state we are not able to send and receive sound and calls
-####Example
+#### Example
 `make_not_tuned()`
 
-###void make_tuned_for_listening_on_frequency(int frequency)
+### void make_tuned_for_listening_on_frequency(int frequency)
 It makes radiostation be able to listen on specified frequency
-####Arguments
+#### Arguments
 `int frequency` - frequency on that application will be able to receive sound
-####Example
+#### Example
 `make_tuned_for_listening_on_frequency(38000)`
 
-###void void make_tuned_for_sending_on_frequency(int frequency);
+### void void make_tuned_for_sending_on_frequency(int frequency);
 It makes radiostation be able to send on specified frequency
-####Arguments
+#### Arguments
 `int frequency` - frequency on that application will be able to send sound or call
-####Example
+#### Example
 `make_tuned_for_sending_on_frequency(38000)`
 
-###void is_call_active(bool is_active)
+### void is_call_active(bool is_active)
 Activate or Disable calling. Call shall be sent if we made it tuned for sending (see function above).
 You should not worry about calling that function or not. Call will be proceed after making tuned for sending.
-####Arguments
+#### Arguments
 `bool is_active` - if is_active == true than we calling. If is_active == false than we disable calling
-####Example
+#### Example
 `is_call_active(true)`
 
-###void handle_cycle(char sound[MESSAGE_SIZE], bool& is_calling_to_you)
+### void handle_cycle(char sound[MESSAGE_SIZE], bool& is_calling_to_you)
 <b>This function must work in infinity loop!</b> <br>
 A sound in the array must always be played after every call!
 If we send sound - it must be in the array
-####Arguments
+#### Arguments
 `char sound[MESSAGE_SIZE]` - MESSAGE_SIZE = 1024 for now.  <br>
 If radiostation is turned to sending state, the content of this array will be sent.
 So that means that it is an input of sending sound.<br>
@@ -75,5 +75,5 @@ Also expected sound type:
 `bool& is_calling_to_you` - this param will be false after calling function if nobody is calling now.
 It will be true if somebody is actually calling. We need it to draw calling signals.
 
-####Example
+#### Example
 void handle_cycle(buffer, flag)
