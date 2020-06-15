@@ -7,7 +7,7 @@
 #include "../model/Server.h"
 #include "../model/Client.h"
 
-class NetworkController : std::thread
+class NetworkController : public std::thread
 {
 
     Server * server;
@@ -39,7 +39,7 @@ class NetworkController : std::thread
     void prepareToAudioOutput(Message& msg);
 
 public:
-    NetworkController(bool server, string ip = "127.0.0.1");
+    NetworkController(bool server, const string& ip = "127.0.0.1");
 
     void config_send(int frequency);
     void config_listen(int frequency);
@@ -48,10 +48,9 @@ public:
     void call_on();
     void call_off();
 
-    void setVolume(char level);
     void setNoiseLevel(float level);
-    void setRecordVolume(char level);
 
+    Message& handle_cycle(char msg[MESSAGE_SIZE]);
     ~NetworkController();
 };
 

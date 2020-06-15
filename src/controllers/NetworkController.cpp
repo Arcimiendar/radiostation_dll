@@ -11,9 +11,6 @@ using std::cout;
 void NetworkController::run()
 {
 
-//    auto audioOut = this->audioOutput->start();
-//    auto audioIn = this->audioInput->start();
-
     bool switched = false;
     bool call = false;
 
@@ -43,11 +40,11 @@ void NetworkController::run()
                 }
                 else
                 {
-                    if (call != false)
-                    {
-                        switched = true;
-                    }
-                    call = false;
+//                    if (call != false)
+//                    {
+//                        switched = true;
+//                    }
+//                    call = false;
 //                    audioIn->read(sendSound.audio_data, MESSAGE_SIZE);
 
                     client->send(sendSound);
@@ -68,23 +65,23 @@ void NetworkController::run()
 
 //                audioOut->write(recieveSound.audio_data, MESSAGE_SIZE);
 
-                if (receiveSound.call)
-                {
-                    if (!call)
-                    {
-                        switched = true;
-                    }
-                    call = true;
-                    receiveSound.call = false;
-                }
-                else
-                {
-                    if (call)
-                    {
-                        switched = true;
-                    }
-                    call = false;
-                }
+//                if (receiveSound.call)
+//                {
+//                    if (!call)
+//                    {
+//                        switched = true;
+//                    }
+//                    call = true;
+//                    receiveSound.call = false;
+//                }
+//                else
+//                {
+//                    if (call)
+//                    {
+//                        switched = true;
+//                    }
+//                    call = false;
+//                }
             }
         }
         else
@@ -96,18 +93,18 @@ void NetworkController::run()
 
         this->change_state.unlock();
 
-        if(switched)
-        {
-            switched = false;
-            if (call)
-            {
-//                emit set_call();
-            }
-            else
-            {
-//                emit reset_call();
-            }
-        }
+//        if(switched)
+//        {
+//            switched = false;
+//            if (call)
+//            {
+////                emit set_call();
+//            }
+//            else
+//            {
+////                emit reset_call();
+//            }
+//        }
     }
 }
 
@@ -140,7 +137,7 @@ void NetworkController::prepareToAudioOutput(Message &msg)
     }
 }
 
-NetworkController::NetworkController(bool server, string ip)
+NetworkController::NetworkController(bool server, const string& ip)
 : std::thread(&NetworkController::run, this)
 {
     if (server)
@@ -170,10 +167,7 @@ NetworkController::NetworkController(bool server, string ip)
 
 
     this->n_exit = true;
-//
-//    QAudioDeviceInfo infoInput = QAudioDeviceInfo::defaultInputDevice();
-//    QAudioDeviceInfo infoOutput = QAudioDeviceInfo::defaultOutputDevice();
-//
+
 //    QAudioFormat format;
 //    format.setSampleRate(8000);
 //    format.setChannelCount(1);
@@ -181,9 +175,6 @@ NetworkController::NetworkController(bool server, string ip)
 //    format.setSampleType(RATE_BYTES == 8 ? QAudioFormat::UnSignedInt : QAudioFormat::SignedInt);
 //    format.setByteOrder(QAudioFormat::LittleEndian);
 //    format.setCodec("audio/pcm");
-//
-//    this->audioInput = new QAudioInput(infoInput, format);
-//    this->audioOutput = new QAudioOutput(infoOutput, format);
 
 
     if (server)
@@ -250,24 +241,10 @@ void NetworkController::call_off()
     this->change_state.unlock();
 }
 
-void NetworkController::setVolume(char level)
-{
-    change_state.lock();
-//    this->audioOutput->setVolume(qreal(level) / 100);
-    change_state.unlock();
-}
-
 void NetworkController::setNoiseLevel(float level)
 {
     change_state.lock();
     this->noise_level = level;
-    change_state.unlock();
-}
-
-void NetworkController::setRecordVolume(char level)
-{
-    change_state.lock();
-//    this->audioInput->setVolume(qreal(level) / 100);
     change_state.unlock();
 }
 
@@ -277,8 +254,28 @@ NetworkController::~NetworkController()
         delete server;
     delete client;
 
-//    delete audioInput;
-//    delete audioOutput;
-
     this->n_exit = false;
+}
+
+Message &NetworkController::handle_cycle(char msg[MESSAGE_SIZE]) {
+    this->change_state.lock();
+
+    Message * output;
+
+    if (!this->is_config)
+        output = &nothing;
+
+    else if (!this->is_send)
+        output = &receiveSound;
+
+    else if (this->is_call)
+        output = &callingSound;
+
+    else {
+        output = &sendSound;
+        memcpy(sendSound.audio_data, msg, MESSAGE_SIZE);
+    }
+    this->change_state.unlock();
+
+    return *output;
 }

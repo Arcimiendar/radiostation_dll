@@ -1,10 +1,8 @@
 #include "Socket.h"
 
-#include <winsock2.h>
 #define INVALID_SOCK_VALUE( SOCK ) SOCK == INVALID_SOCKET
 
 #include <cstring>
-#pragma comment(lib, "ws2_32.lib")
 #include <iostream>
 using std::cout;
 
