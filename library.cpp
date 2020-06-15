@@ -5,3 +5,7 @@
 void hello() {
     std::cout << "Hello, World!" << std::endl;
 }
+
+void lol() {
+    std::cout << "loooooooooool";
+}
