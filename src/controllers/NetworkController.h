@@ -9,6 +9,7 @@
 
 class NetworkController : public std::thread
 {
+    bool init_passed;
 
     Server * server;
     Client * client;

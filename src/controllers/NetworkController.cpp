@@ -10,9 +10,10 @@ using std::cout;
 
 void NetworkController::run()
 {
+    while(!init_passed);
 
-    bool switched = false;
-    bool call = false;
+//    bool switched = false;
+//    bool call = false;
 
     cout << "network thread is run";
 
@@ -26,11 +27,11 @@ void NetworkController::run()
             {
                 if (this->is_call)
                 {
-                    if (!call)
-                    {
-                        switched = true;
-                    }
-                    call = true;
+//                    if (!call)
+//                    {
+//                        switched = true;
+//                    }
+//                    call = true;
 
                     client->send(callingSound);
                     client->receive(callingSound);
@@ -138,7 +139,7 @@ void NetworkController::prepareToAudioOutput(Message &msg)
 }
 
 NetworkController::NetworkController(bool server, const string& ip)
-: std::thread(&NetworkController::run, this)
+: init_passed(false), std::thread(&NetworkController::run, this)
 {
     if (server)
         this->server = new Server();
@@ -187,6 +188,8 @@ NetworkController::NetworkController(bool server, const string& ip)
     this->is_config = false;
 
     this->noise_level = 2;
+
+    init_passed = true;
 }
 
 void NetworkController::config_send(int frequency)

@@ -27,7 +27,9 @@ class Server
 
     class ListeningThread : public std::thread
     {
+        friend class Server;
         Server * parentServer;
+        bool init_passed;
         void run();
     public:
         ListeningThread(Server* parent);
@@ -36,7 +38,8 @@ class Server
 
     class SendReceiveThread : public std::thread
     {
-
+        friend class Server;
+        bool init_passed;
         Server * parentServer;
         void run();
     public:

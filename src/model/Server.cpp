@@ -14,6 +14,9 @@ Server::Server() :
     this->socket.bind(5000);
     this->exit_flag = true;
 
+    listeningThread.init_passed = true;
+    receiveThread.init_passed = true;
+
     listeningThread.detach();
     receiveThread.detach();
 
@@ -26,6 +29,8 @@ void Server::close()
 
 void Server::ListeningThread::run()
 {
+    while(!init_passed);
+
     while(parentServer->exit_flag)
     {
         parentServer->socket.listen();
@@ -41,13 +46,14 @@ void Server::ListeningThread::run()
 }
 
 Server::ListeningThread::ListeningThread(Server *parent)
-: thread(&Server::ListeningThread::run, this)
+: init_passed(false), thread(&Server::ListeningThread::run, this)
 {
     this->parentServer = parent;
 }
 
 void Server::SendReceiveThread::run()
 {
+    while(!init_passed);
 
     while(parentServer->exit_flag)
     {
@@ -133,7 +139,7 @@ void Server::SendReceiveThread::run()
 }
 
 Server::SendReceiveThread::SendReceiveThread(Server *parent)
-: std::thread(&Server::SendReceiveThread::run, this)
+: init_passed(false), std::thread(&Server::SendReceiveThread::run, this)
 {
     this->parentServer = parent;
 }

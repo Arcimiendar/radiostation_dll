@@ -4,7 +4,7 @@
 
 NetworkController * controller;
 
-void init(const char*& ip_address, bool is_server) {
+void init(const char ip_address[], bool is_server) {
     Socket::init();
     controller = new NetworkController(is_server, ip_address);
     controller->detach();

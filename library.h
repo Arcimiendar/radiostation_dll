@@ -5,7 +5,7 @@
 #include "src/controllers/NetworkController.h"
 
 
-extern "C" __declspec(dllexport) void init(const char*& ip_address, bool is_server);
+extern "C" __declspec(dllexport) void init(const char ip_address[], bool is_server);
 extern "C" __declspec(dllexport) void stop();
 
 extern "C" __declspec(dllexport) void set_noise_level(float level);
