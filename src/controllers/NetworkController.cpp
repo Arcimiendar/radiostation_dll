@@ -254,7 +254,10 @@ void NetworkController::setNoiseLevel(float level)
 NetworkController::~NetworkController()
 {
     if (server)
+    {
+        server->close();
         delete server;
+    }
     delete client;
 
     this->n_exit = false;

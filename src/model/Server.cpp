@@ -24,7 +24,9 @@ Server::Server() :
 
 void Server::close()
 {
-    this->exit_flag = false;
+   list_mutex.lock();
+   exit_flag = false;
+   list_mutex.unlock();
 }
 
 void Server::ListeningThread::run()
@@ -39,6 +41,11 @@ void Server::ListeningThread::run()
         cout << "launched";
 
         parentServer->list_mutex.lock();
+        if (!parentServer->exit_flag)
+        {
+            parentServer->list_mutex.unlock();
+            return;
+        }
         parentServer->sockets.push_front(client);
         parentServer->messages.push_front(Message());
         parentServer->list_mutex.unlock();
@@ -58,6 +65,10 @@ void Server::SendReceiveThread::run()
     while(parentServer->exit_flag)
     {
         parentServer->list_mutex.lock();
+        if (!parentServer->exit_flag) {
+            parentServer->list_mutex.unlock();
+            return;
+        }
 
         auto clientPtr = parentServer->sockets.begin();
         auto messagePtr = parentServer->messages.begin();
