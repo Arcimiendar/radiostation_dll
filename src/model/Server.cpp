@@ -3,6 +3,7 @@
 //
 
 #include "Server.h"
+#include "Client.h"
 #include <smmintrin.h>
 #include <iostream>
 using std::cout;
@@ -27,6 +28,18 @@ void Server::close()
    list_mutex.lock();
    exit_flag = false;
    list_mutex.unlock();
+
+   Client mock_client("127.0.0.1"); // to unlock listening thread
+
+   while(listeningThread.is_running) {
+       cout << "await stop of listening thread" << std::endl;
+       cout.flush();
+
+   }
+   while(receiveThread.is_running) {
+       cout << "await stop of receiving thread" << std::endl;
+       cout.flush();
+   }
 }
 
 void Server::ListeningThread::run()
@@ -43,6 +56,7 @@ void Server::ListeningThread::run()
         parentServer->list_mutex.lock();
         if (!parentServer->exit_flag)
         {
+            is_running = false;
             parentServer->list_mutex.unlock();
             return;
         }
@@ -50,10 +64,11 @@ void Server::ListeningThread::run()
         parentServer->messages.push_front(Message());
         parentServer->list_mutex.unlock();
     }
+    is_running = false;
 }
 
 Server::ListeningThread::ListeningThread(Server *parent)
-: init_passed(false), thread(&Server::ListeningThread::run, this)
+: init_passed(false), thread(&Server::ListeningThread::run, this), is_running(true)
 {
     this->parentServer = parent;
 }
@@ -66,6 +81,7 @@ void Server::SendReceiveThread::run()
     {
         parentServer->list_mutex.lock();
         if (!parentServer->exit_flag) {
+            is_running = false;
             parentServer->list_mutex.unlock();
             return;
         }
@@ -147,10 +163,11 @@ void Server::SendReceiveThread::run()
 
         parentServer->list_mutex.unlock();
     }
+    is_running = false;
 }
 
 Server::SendReceiveThread::SendReceiveThread(Server *parent)
-: init_passed(false), std::thread(&Server::SendReceiveThread::run, this)
+: init_passed(false), std::thread(&Server::SendReceiveThread::run, this), is_running(true)
 {
     this->parentServer = parent;
 }

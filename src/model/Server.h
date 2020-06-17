@@ -30,6 +30,9 @@ class Server
         friend class Server;
         Server * parentServer;
         bool init_passed;
+
+        bool is_running;
+
         void run();
     public:
         ListeningThread(Server* parent);
@@ -40,6 +43,9 @@ class Server
     {
         friend class Server;
         bool init_passed;
+
+        bool is_running;
+
         Server * parentServer;
         void run();
     public:

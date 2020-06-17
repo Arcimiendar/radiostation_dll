@@ -15,6 +15,7 @@ class NetworkController : public std::thread
     Client * client;
 
     bool n_exit;
+    bool is_running;
 
     std::mutex change_state;
 

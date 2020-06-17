@@ -107,6 +107,8 @@ void NetworkController::run()
 //            }
 //        }
     }
+
+    is_running = false;
 }
 
 Message NetworkController::getNoise()
@@ -139,7 +141,7 @@ void NetworkController::prepareToAudioOutput(Message &msg)
 }
 
 NetworkController::NetworkController(bool server, const string& ip)
-: init_passed(false), std::thread(&NetworkController::run, this)
+: init_passed(false), std::thread(&NetworkController::run, this), is_running(true)
 {
     if (server)
         this->server = new Server();
@@ -261,6 +263,10 @@ NetworkController::~NetworkController()
     delete client;
 
     this->n_exit = false;
+
+    while(is_running) {
+        cout << "await stop of network controller thread" << std::endl;
+    }
 }
 
 Message &NetworkController::handle_cycle(char msg[MESSAGE_SIZE]) {
