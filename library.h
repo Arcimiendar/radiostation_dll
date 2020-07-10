@@ -13,6 +13,6 @@ extern "C" __declspec(dllexport) void is_call_active(bool is_active);
 extern "C" __declspec(dllexport) void make_not_tuned();
 extern "C" __declspec(dllexport) void make_tuned_for_listening_on_frequency(int frequency);
 extern "C" __declspec(dllexport) void make_tuned_for_sending_on_frequency(int frequency);
-extern "C" __declspec(dllexport) void handle_cycle(char sound[MESSAGE_SIZE], bool& is_calling_to_you);
+extern "C" __declspec(dllexport) char* handle_cycle(char* in_sound);
 
 #endif //RADIOSTATION_DLL_LIBRARY_H

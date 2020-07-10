@@ -270,7 +270,7 @@ NetworkController::~NetworkController()
 }
 
 Message &NetworkController::handle_cycle(char msg[MESSAGE_SIZE]) {
-    this->change_state.lock();
+//    this->change_state.lock();
 
     Message * output;
 
@@ -287,7 +287,7 @@ Message &NetworkController::handle_cycle(char msg[MESSAGE_SIZE]) {
         output = &sendSound;
         memcpy(sendSound.audio_data, msg, MESSAGE_SIZE);
     }
-    this->change_state.unlock();
+//    this->change_state.unlock();
 
     return *output;
 }

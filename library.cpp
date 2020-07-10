@@ -3,14 +3,18 @@
 #include <iostream>
 
 NetworkController * controller;
+char * sound;
 
 void init(const char ip_address[], bool is_server) {
+    sound = new char[1026];
+    sound[1025] = 0;
     Socket::init();
     controller = new NetworkController(is_server, ip_address);
     controller->detach();
 }
 
 void stop() {
+    delete sound;
     delete controller;
     Socket::clear();
 }
@@ -38,9 +42,10 @@ void make_tuned_for_sending_on_frequency(int frequency) {
     controller->config_send(frequency);
 }
 
-void handle_cycle(char sound[MESSAGE_SIZE], bool& is_calling_to_you) {
-    Message& msg = controller->handle_cycle(sound);
+char* handle_cycle(char *in_sound) {
+    Message& msg = controller->handle_cycle(in_sound);
     memcpy(sound, msg.audio_data, MESSAGE_SIZE);
+    sound[1024] = msg.call;
 
-    is_calling_to_you = msg.call;
+    return sound;
 }

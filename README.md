@@ -53,16 +53,19 @@ You should not worry about calling that function or not. Call will be proceed af
 #### Example
 `is_call_active(true)`
 
-### void handle_cycle(char sound[MESSAGE_SIZE], bool& is_calling_to_you)
+### char* handle_cycle(char in_sound[MESSAGE_SIZE])
 <b>This function must work in infinity loop!</b> <br>
-A sound in the array must always be played after every call!
-If we send sound - it must be in the array
+A sound in the array must always be played after every call (first 1024 bytes of returned array)!
+If we send sound - it must be in the array "in_sound"
 #### Arguments
 `char sound[MESSAGE_SIZE]` - MESSAGE_SIZE = 1024 for now.  <br>
 If radiostation is turned to sending state, the content of this array will be sent.
 So that means that it is an input of sending sound.<br>
 We must always play the content of this array after calling function!
 <b>EVEN IF THE RADIOSTATION IS CALLING, IS NOT CONFIGURED, SENDING OR RECEIVING!!!!!</b>
+#### Return
+Returns 1025 bytes. First 1024 is a sound data to play. 1025 byte is boolean flag is_calling. 
+If it's true - somebody is calling to us.
 
 Also expected sound type:
 * sample rate = 8000 (recommended. May be different)
